@@ -3,3 +3,4 @@ uvicorn
 requests
 finnhub-python
 python-dotenv
+security==1.3.1

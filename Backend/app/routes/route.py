@@ -2,6 +2,8 @@ from fastapi import APIRouter, HTTPException, Body
 import requests
 from app.config import Config
 from app.utils import summarize_stock_data
+from security import safe_requests
+
 api_router = APIRouter()
 
 
@@ -18,7 +20,7 @@ async def get_market_status():
     params = {"apiKey": Config.POLYGON_API_KEY}
     
     # print(url, params)
-    response = requests.get(url, params=params)
+    response = safe_requests.get(url, params=params)
     if response.status_code != 200:
         raise HTTPException(status_code=response.status_code, detail=response.json())
     
@@ -41,7 +43,7 @@ async def get_stock_details(ticker: str):
     """
     url = f"https://api.polygon.io/v3/reference/tickers/{ticker}"
     params = {"apiKey": Config.POLYGON_API_KEY}
-    response = requests.get(url, params=params)
+    response = safe_requests.get(url, params=params)
    
     if response.status_code != 200:
         raise HTTPException(status_code=response.status_code, detail=response.json())
@@ -71,7 +73,7 @@ async def get_previous_day_details(ticker: str):
     url = f"https://api.polygon.io/v2/aggs/ticker/{ticker}/prev?adjusted=true"
     params = {"apiKey": Config.POLYGON_API_KEY}
 
-    response = requests.get(url, params=params)
+    response = safe_requests.get(url, params=params)
     if response.status_code != 200:
         raise HTTPException(status_code=response.status_code, detail=response.json())
     
@@ -134,7 +136,7 @@ async def get_timeframe(ticker: str,
 
     try:
 
-        response = requests.get(url, params=params)
+        response = safe_requests.get(url, params=params)
         data = response.json()
 
         if response.status_code != 200:
